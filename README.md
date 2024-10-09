@@ -1,4 +1,5 @@
 # IT5100F - Assignment 3
+
 Semester: AY2024/2025 Semester 1
 
 - [IT5100F - Assignment 3](#it5100f---assignment-3)
@@ -85,98 +86,13 @@ endomondo_df.head()
 
 ```
 
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>altitude</th>
-      <th>heart_rate</th>
-      <th>id</th>
-      <th>latitude</th>
-      <th>longitude</th>
-      <th>speed</th>
-      <th>sport</th>
-      <th>timestamp</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>41.6</td>
-      <td>100</td>
-      <td>396826535.0</td>
-      <td>60.173349</td>
-      <td>24.649770</td>
-      <td>6.8652</td>
-      <td>bike</td>
-      <td>2014-08-24 16:45:46</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>40.6</td>
-      <td>111</td>
-      <td>396826535.0</td>
-      <td>60.173240</td>
-      <td>24.650143</td>
-      <td>16.4736</td>
-      <td>bike</td>
-      <td>2014-08-24 16:45:54</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>40.6</td>
-      <td>120</td>
-      <td>396826535.0</td>
-      <td>60.172980</td>
-      <td>24.650911</td>
-      <td>19.1988</td>
-      <td>bike</td>
-      <td>2014-08-24 16:46:05</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>38.4</td>
-      <td>119</td>
-      <td>396826535.0</td>
-      <td>60.172478</td>
-      <td>24.650669</td>
-      <td>20.4804</td>
-      <td>bike</td>
-      <td>2014-08-24 16:46:18</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>37.0</td>
-      <td>120</td>
-      <td>396826535.0</td>
-      <td>60.171861</td>
-      <td>24.649145</td>
-      <td>31.3956</td>
-      <td>bike</td>
-      <td>2014-08-24 16:46:34</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
+|   | altitude | heart_rate | id          | latitude  | longitude | speed  | sport | timestamp           |
+|---|----------|------------|-------------|-----------|-----------|--------|-------|---------------------|
+| 0 | 41.6     | 100        | 396826535.0 | 60.173349 | 24.649770 | 6.8652 | bike  | 2014-08-24 16:45:46 |
+| 1 | 40.6     | 111        | 396826535.0 | 60.173240 | 24.650143 | 16.4736| bike  | 2014-08-24 16:45:54 |
+| 2 | 40.6     | 120        | 396826535.0 | 60.172980 | 24.650911 | 19.1988| bike  | 2014-08-24 16:46:05 |
+| 3 | 38.4     | 119        | 396826535.0 | 60.172478 | 24.650669 | 20.4804| bike  | 2014-08-24 16:46:18 |
+| 4 | 37.0     | 120        | 396826535.0 | 60.171861 | 24.649145 | 31.3956| bike  | 2014-08-24 16:46:34 |
 
 The `info()` method prints information about the DataFrame, including the index dtype, columns, non-null values, and memory usage. It also provides a concise summary of the endomondo_df for us.
 
