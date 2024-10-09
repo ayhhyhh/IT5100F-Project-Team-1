@@ -1751,11 +1751,7 @@ plt.ylabel('Actual Sports')
 plt.title('Normalized Confusion Matrix of Sports')
 plt.show()
 ```
-
-    c:\miniconda3\envs\v\lib\site-packages\sklearn\base.py:1473: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples,), for example using ravel().
-      return fit_method(estimator, *args, **kwargs)
-    
-
+ 
     Classification Report:
                       precision    recall  f1-score   support
     
