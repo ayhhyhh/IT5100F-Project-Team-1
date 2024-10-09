@@ -1,40 +1,6 @@
 # IT5100F - Assignment 3
 Semester: AY2024/2025 Semester 1
 
-- [IT5100F - Assignment 3](#it5100f---assignment-3)
-- [**Task 1: Unsupervised Learning**](#task-1-unsupervised-learning)
-  - [Import Libraries](#import-libraries)
-  - [0: Data loading](#0-data-loading)
-    - [Load the data from previous assignments](#load-the-data-from-previous-assignments)
-  - [1: Data Preprocessing for Clustering](#1-data-preprocessing-for-clustering)
-    - [1.1 Filter Data for Specific Sport](#11-filter-data-for-specific-sport)
-    - [1.2 Generate Average Speed Dataset](#12-generate-average-speed-dataset)
-    - [1.3 Compute Total Workout Time](#13-compute-total-workout-time)
-    - [1.4 Compute Total Distance Covered](#14-compute-total-distance-covered)
-    - [1.5 Merge Processed Data](#15-merge-processed-data)
-  - [2: Determine the Optimal Number of Clusters](#2-determine-the-optimal-number-of-clusters)
-    - [2.1 Run K-Means for Different Cluster Numbers](#21-run-k-means-for-different-cluster-numbers)
-    - [2.2 Elbow Method for Optimal Clusters](#22-elbow-method-for-optimal-clusters)
-  - [3: Cluster Analysis and Visualization](#3-cluster-analysis-and-visualization)
-    - [3.1 Identify the Cluster Number for Each User](#31-identify-the-cluster-number-for-each-user)
-    - [3.2 Visualize the Clusters](#32-visualize-the-clusters)
-    - [3.3 Identify Similar Users](#33-identify-similar-users)
-- [**Task 2: Free-form Exploration**: Sport Classfication](#task-2-free-form-exploration-sport-classfication)
-- [Problem definition](#problem-definition)
-- [Solution](#solution)
-  - [Import Libraries](#import-libraries-1)
-  - [0: Data loading](#0-data-loading-1)
-    - [Load the data from previous assignments](#load-the-data-from-previous-assignments-1)
-    - [1.1 Calculate Useful Factors](#11-calculate-useful-factors)
-    - [1.2 Explore class distributions after aggregation](#12-explore-class-distributions-after-aggregation)
-    - [1.3 Drop sports with very few users](#13-drop-sports-with-very-few-users)
-  - [2: Model Training and Application](#2-model-training-and-application)
-    - [2.1 Define the Features and Target Variable](#21-define-the-features-and-target-variable)
-    - [2.2 Split the data into training and testing sets](#22-split-the-data-into-training-and-testing-sets)
-    - [2.3 Build the Random Forest Classifier](#23-build-the-random-forest-classifier)
-    - [2.4 Calculate the prediction accuracy](#24-calculate-the-prediction-accuracy)
-    - [3.1 Try using SMOTE and retrain the model](#31-try-using-smote-and-retrain-the-model)
-
 # **Task 1: Unsupervised Learning**
 
 ## Import Libraries
@@ -51,8 +17,6 @@ from sklearn.decomposition import PCA
 from scipy.spatial.distance import euclidean
 tqdm.pandas()
 ```
-
-
 
 ## 0: Data loading
 
@@ -87,12 +51,122 @@ endomondo_df.head()
 
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>altitude</th>
+      <th>heart_rate</th>
+      <th>id</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>speed</th>
+      <th>sport</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>41.6</td>
+      <td>100</td>
+      <td>396826535.0</td>
+      <td>60.173349</td>
+      <td>24.649770</td>
+      <td>6.8652</td>
+      <td>bike</td>
+      <td>2014-08-24 16:45:46</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>40.6</td>
+      <td>111</td>
+      <td>396826535.0</td>
+      <td>60.173240</td>
+      <td>24.650143</td>
+      <td>16.4736</td>
+      <td>bike</td>
+      <td>2014-08-24 16:45:54</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>40.6</td>
+      <td>120</td>
+      <td>396826535.0</td>
+      <td>60.172980</td>
+      <td>24.650911</td>
+      <td>19.1988</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:05</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>38.4</td>
+      <td>119</td>
+      <td>396826535.0</td>
+      <td>60.172478</td>
+      <td>24.650669</td>
+      <td>20.4804</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:18</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>37.0</td>
+      <td>120</td>
+      <td>396826535.0</td>
+      <td>60.171861</td>
+      <td>24.649145</td>
+      <td>31.3956</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:34</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 The `info()` method prints information about the DataFrame, including the index dtype, columns, non-null values, and memory usage. It also provides a concise summary of the endomondo_df for us.
 
 
 ```python
 endomondo_df.info()
 ```
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 9695500 entries, 0 to 9695499
+    Data columns (total 8 columns):
+     #   Column      Dtype  
+    ---  ------      -----  
+     0   altitude    float64
+     1   heart_rate  int64  
+     2   id          float64
+     3   latitude    float64
+     4   longitude   float64
+     5   speed       float64
+     6   sport       object 
+     7   timestamp   object 
+    dtypes: float64(5), int64(1), object(2)
+    memory usage: 591.8+ MB
+    
 
 ## 1: Data Preprocessing for Clustering
 
@@ -106,6 +180,24 @@ sports_counts = endomondo_df['sport'].value_counts()
 print(sports_counts)
 
 ```
+
+    sport
+    bike                       4579000
+    run                        4256500
+    bike (transport)            321500
+    mountain bike               262000
+    indoor cycling              201500
+    walk                         30000
+    fitness walking              12500
+    cross-country skiing          8000
+    core stability training       7000
+    roller skiing                 6500
+    skate                         4500
+    orienteering                  3500
+    kayaking                      1500
+    hiking                        1500
+    Name: count, dtype: int64
+    
 
 Here, the endomondo_df dataset includes various sports such as `bike`, `run`, and `bike (transport)`. To filter out the entries where the sport is `bike`, we use `==` to generate a boolean sequence. This sequence is then used to index the dataframe, returning only the rows where the sport is `bike`. We apply the `copy()` method to create an independent copy of the original dataframe, ensuring any modifications made later won't affect the original data.
 
@@ -123,6 +215,10 @@ print(type(bike_df.loc[0,'id']))
 print(type(bike_df.loc[0,'timestamp']))
 ```
 
+    <class 'numpy.float64'>
+    <class 'str'>
+    
+
 
 ```python
 # Convert 'timestamp' column to datetime objects
@@ -139,10 +235,120 @@ Let's check the type again.
 bike_df.info()
 ```
 
+    <class 'pandas.core.frame.DataFrame'>
+    Index: 4579000 entries, 0 to 9666499
+    Data columns (total 8 columns):
+     #   Column      Dtype         
+    ---  ------      -----         
+     0   altitude    float64       
+     1   heart_rate  int64         
+     2   id          int32         
+     3   latitude    float64       
+     4   longitude   float64       
+     5   speed       float64       
+     6   sport       object        
+     7   timestamp   datetime64[ns]
+    dtypes: datetime64[ns](1), float64(4), int32(1), int64(1), object(1)
+    memory usage: 425.9+ MB
+    
+
 
 ```python
 bike_df.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>altitude</th>
+      <th>heart_rate</th>
+      <th>id</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>speed</th>
+      <th>sport</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>41.6</td>
+      <td>100</td>
+      <td>396826535</td>
+      <td>60.173349</td>
+      <td>24.649770</td>
+      <td>6.8652</td>
+      <td>bike</td>
+      <td>2014-08-24 16:45:46</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>40.6</td>
+      <td>111</td>
+      <td>396826535</td>
+      <td>60.173240</td>
+      <td>24.650143</td>
+      <td>16.4736</td>
+      <td>bike</td>
+      <td>2014-08-24 16:45:54</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>40.6</td>
+      <td>120</td>
+      <td>396826535</td>
+      <td>60.172980</td>
+      <td>24.650911</td>
+      <td>19.1988</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:05</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>38.4</td>
+      <td>119</td>
+      <td>396826535</td>
+      <td>60.172478</td>
+      <td>24.650669</td>
+      <td>20.4804</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:18</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>37.0</td>
+      <td>120</td>
+      <td>396826535</td>
+      <td>60.171861</td>
+      <td>24.649145</td>
+      <td>31.3956</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:34</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 Although we dropped all the NA values in Assignment 1, we will check for NA values again to ensure no NA values are present in the data.
 
@@ -150,6 +356,13 @@ Although we dropped all the NA values in Assignment 1, we will check for NA valu
 ```python
 bike_df.isna().sum().sum()
 ```
+
+
+
+
+    0
+
+
 
 At this point, we have successfully obtained a subset of the original dataset that only includes users who participated in sports `bike`.
 
@@ -169,6 +382,66 @@ print(len(avg_speed_df))
 avg_speed_df.head()
 
 ```
+
+    9158
+    
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>avg_speed</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9633831</td>
+      <td>29.879453</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10544802</td>
+      <td>29.825676</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11426022</td>
+      <td>25.096514</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11639926</td>
+      <td>24.416834</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11908018</td>
+      <td>30.805798</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 ### 1.3 Compute Total Workout Time
 
@@ -195,11 +468,68 @@ workout_time_df.head()
 
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>workout_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9633831</td>
+      <td>4900.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10544802</td>
+      <td>4608.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11426022</td>
+      <td>7698.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11639926</td>
+      <td>8880.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11908018</td>
+      <td>11046.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 ### 1.4 Compute Total Distance Covered
 
 Create a new dataset with user_ids and the total distance (total_distance) covered by each user.
 
-To obtain total distance for each user, we use $\text{distance}=\text{avg_speed} \times \text{workout_time}$ formula. So first, we merge the previous two DataFrame, then multiply `avg_speed` column and `workout_time` column to get `total_distance`.
+To obtain total distance for each user, we use distance=avg_speed * workout_time formula. So first, we merge the previous two DataFrame, then multiply `avg_speed` column and `workout_time` column to get `total_distance`.
 
 
 ```python
@@ -209,6 +539,63 @@ total_distance_df['total_distance'] = total_distance_df['avg_speed'] * total_dis
 total_distance_df = total_distance_df[['id', 'total_distance']]
 total_distance_df.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>total_distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9633831</td>
+      <td>146409.318720</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10544802</td>
+      <td>137436.715008</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11426022</td>
+      <td>193192.967851</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11639926</td>
+      <td>216821.489472</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11908018</td>
+      <td>340280.840290</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 ### 1.5 Merge Processed Data
 
@@ -229,6 +616,75 @@ user_merged_df = pd.concat(
 
 user_merged_df.head()
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>avg_speed</th>
+      <th>workout_time</th>
+      <th>total_distance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9633831</td>
+      <td>29.879453</td>
+      <td>4900.0</td>
+      <td>146409.318720</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10544802</td>
+      <td>29.825676</td>
+      <td>4608.0</td>
+      <td>137436.715008</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11426022</td>
+      <td>25.096514</td>
+      <td>7698.0</td>
+      <td>193192.967851</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11639926</td>
+      <td>24.416834</td>
+      <td>8880.0</td>
+      <td>216821.489472</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11908018</td>
+      <td>30.805798</td>
+      <td>11046.0</td>
+      <td>340280.840290</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 ## 2: Determine the Optimal Number of Clusters
 
@@ -260,6 +716,9 @@ for n_clusters in cluster_range:
 print(inertia)
 ```
 
+    [15168.299598080346, 10681.861943672142, 8863.346142508111, 7083.4150342617695, 5887.568984873041, 5189.091420621934, 4757.930468282856, 4243.862983974922, 3919.4003948357813, 3601.3000470406437]
+    
+
 ### 2.2 Elbow Method for Optimal Clusters
 
 Plot the inertia (y-axis) against the number of clusters (x-axis) to identify the optimal number of clusters using the Elbow method.
@@ -279,6 +738,12 @@ plt.xticks(cluster_range)
 plt.grid(True)
 plt.show()
 ```
+
+
+    
+![png](README_files/README_36_0.png)
+    
+
 
 
 ```python
@@ -307,6 +772,81 @@ user_merged_df.head()
 
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>avg_speed</th>
+      <th>workout_time</th>
+      <th>total_distance</th>
+      <th>cluster</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9633831</td>
+      <td>29.879453</td>
+      <td>4900.0</td>
+      <td>146409.318720</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10544802</td>
+      <td>29.825676</td>
+      <td>4608.0</td>
+      <td>137436.715008</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11426022</td>
+      <td>25.096514</td>
+      <td>7698.0</td>
+      <td>193192.967851</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11639926</td>
+      <td>24.416834</td>
+      <td>8880.0</td>
+      <td>216821.489472</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11908018</td>
+      <td>30.805798</td>
+      <td>11046.0</td>
+      <td>340280.840290</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 ### 3.2 Visualize the Clusters
 
 Visualize the clusters using a scatter plot.
@@ -334,6 +874,12 @@ plt.colorbar(scatter)
 plt.show()
 ```
 
+
+    
+![png](README_files/README_41_0.png)
+    
+
+
 For better visualization, we first apply Principal Component Analysis to reduce the dimensionality of the features from 3 to 2. This allows us to project the data into two principal components, which can then be visualized using a 2D scatter plot.
 
 
@@ -354,6 +900,12 @@ plt.grid(True)
 plt.show()
 ```
 
+
+    
+![png](README_files/README_43_0.png)
+    
+
+
 Then we try t-SNE method for dimensionality reduction. In our practice, we reduce the features to 2 components for visualization using a 2D scatter plot.
 
 
@@ -371,6 +923,12 @@ plt.xlabel('t-SNE Component 1')
 plt.ylabel('t-SNE Component 2')
 plt.show()
 ```
+
+
+    
+![png](README_files/README_45_0.png)
+    
+
 
 ### 3.3 Identify Similar Users
 
@@ -424,6 +982,49 @@ print(f"Average Speed: {cluster_avg['avg_speed']:.2f} km/h")
 print(f"Total Distance: {cluster_avg['total_distance']:.2f} km")
 print(f"Workout Time: {cluster_avg['workout_time']:.2f} seconds")
 ```
+
+    Target User (ID: 377398220):
+    Cluster: 3.0
+    Average Speed: 28.78 km/h
+    Total Distance: 108079.47 km
+    Workout Time: 3756.00 seconds
+    
+    Top 5 similar users:
+    User ID: 248753701.0
+      Average Speed: 27.30 km/h
+      Total Distance: 108081.08 km
+      Workout Time: 3959.00 seconds
+      Similarity Score: 2.18
+    
+    User ID: 67898654.0
+      Average Speed: 24.47 km/h
+      Total Distance: 108072.49 km
+      Workout Time: 4416.00 seconds
+      Similarity Score: 8.20
+    
+    User ID: 224376777.0
+      Average Speed: 27.57 km/h
+      Total Distance: 108110.86 km
+      Workout Time: 3922.00 seconds
+      Similarity Score: 31.40
+    
+    User ID: 413370913.0
+      Average Speed: 25.91 km/h
+      Total Distance: 108132.76 km
+      Workout Time: 4173.00 seconds
+      Similarity Score: 53.37
+    
+    User ID: 301826582.0
+      Average Speed: 23.18 km/h
+      Total Distance: 108006.47 km
+      Workout Time: 4659.00 seconds
+      Similarity Score: 73.21
+    
+    Cluster 3.0 Averages:
+    Average Speed: 26.39 km/h
+    Total Distance: 99962.53 km
+    Workout Time: 3805.44 seconds
+    
 
 # **Task 2: Free-form Exploration**: Sport Classfication
 
@@ -517,9 +1118,119 @@ endomondo_df.head()
 ```
 
 
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>altitude</th>
+      <th>heart_rate</th>
+      <th>id</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>speed</th>
+      <th>sport</th>
+      <th>timestamp</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>41.6</td>
+      <td>100</td>
+      <td>396826535.0</td>
+      <td>60.173349</td>
+      <td>24.649770</td>
+      <td>6.8652</td>
+      <td>bike</td>
+      <td>2014-08-24 16:45:46</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>40.6</td>
+      <td>111</td>
+      <td>396826535.0</td>
+      <td>60.173240</td>
+      <td>24.650143</td>
+      <td>16.4736</td>
+      <td>bike</td>
+      <td>2014-08-24 16:45:54</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>40.6</td>
+      <td>120</td>
+      <td>396826535.0</td>
+      <td>60.172980</td>
+      <td>24.650911</td>
+      <td>19.1988</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:05</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>38.4</td>
+      <td>119</td>
+      <td>396826535.0</td>
+      <td>60.172478</td>
+      <td>24.650669</td>
+      <td>20.4804</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:18</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>37.0</td>
+      <td>120</td>
+      <td>396826535.0</td>
+      <td>60.171861</td>
+      <td>24.649145</td>
+      <td>31.3956</td>
+      <td>bike</td>
+      <td>2014-08-24 16:46:34</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 endomondo_df.info()
 ```
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 9695500 entries, 0 to 9695499
+    Data columns (total 8 columns):
+     #   Column      Dtype  
+    ---  ------      -----  
+     0   altitude    float64
+     1   heart_rate  int64  
+     2   id          float64
+     3   latitude    float64
+     4   longitude   float64
+     5   speed       float64
+     6   sport       object 
+     7   timestamp   object 
+    dtypes: float64(5), int64(1), object(2)
+    memory usage: 591.8+ MB
+    
 
 ### 1.1 Calculate Useful Factors
 
@@ -549,6 +1260,99 @@ new_endomondo_df = new_endomondo_df.drop(columns=['min', 'max'])
 new_endomondo_df.head()
 ```
 
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>sport</th>
+      <th>avg_altitude</th>
+      <th>avg_heart_rate</th>
+      <th>avg_latitude</th>
+      <th>avg_longitude</th>
+      <th>avg_speed</th>
+      <th>total_time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>9633831</td>
+      <td>bike</td>
+      <td>12.5516</td>
+      <td>137.402</td>
+      <td>55.401869</td>
+      <td>11.261268</td>
+      <td>29.879453</td>
+      <td>4900.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>10544802</td>
+      <td>bike</td>
+      <td>16.9572</td>
+      <td>136.644</td>
+      <td>55.378049</td>
+      <td>11.269396</td>
+      <td>29.825676</td>
+      <td>4608.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>11426022</td>
+      <td>bike</td>
+      <td>36.7208</td>
+      <td>154.328</td>
+      <td>59.084909</td>
+      <td>10.144285</td>
+      <td>25.096514</td>
+      <td>7698.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>11639926</td>
+      <td>bike</td>
+      <td>14.8336</td>
+      <td>145.996</td>
+      <td>51.665524</td>
+      <td>0.392160</td>
+      <td>24.416834</td>
+      <td>8880.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11908018</td>
+      <td>bike</td>
+      <td>41.7756</td>
+      <td>139.628</td>
+      <td>55.389810</td>
+      <td>11.424099</td>
+      <td>30.805798</td>
+      <td>11046.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 ### 1.2 Explore class distributions after aggregation
 
 
@@ -565,6 +1369,31 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 ```
+
+    Class Distribution:
+    sport
+    bike                       9158
+    run                        8513
+    bike (transport)            643
+    mountain bike               524
+    indoor cycling              403
+    walk                         60
+    fitness walking              25
+    cross-country skiing         16
+    core stability training      14
+    roller skiing                13
+    skate                         9
+    orienteering                  7
+    kayaking                      3
+    hiking                        3
+    Name: count, dtype: int64
+    
+
+
+    
+![png](README_files/README_62_1.png)
+    
+
 
 From the distribution above, we can observe that many sport classes have very few data samples of unique users after aggregation. These data cannot provide enough information for classfication, instead, these may introduce noise to our dataset. Hence, we decide to remove those sports with samples less than 100.
 
@@ -596,6 +1425,22 @@ plt.xticks(rotation=45)
 plt.tight_layout()
 plt.show()
 ```
+
+    Class Distribution:
+    sport
+    bike                9158
+    run                 8513
+    bike (transport)     643
+    mountain bike        524
+    indoor cycling       403
+    Name: count, dtype: int64
+    
+
+
+    
+![png](README_files/README_66_1.png)
+    
+
 
 After filtering, we are actually classifying five sports:
 
@@ -651,6 +1496,421 @@ rf = RandomForestClassifier(n_estimators=rf_N, random_state=RANDOM_STATE)
 rf.fit(X_train_scaled, Y_train)
 ```
 
+    c:\miniconda3\envs\v\lib\site-packages\sklearn\base.py:1473: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples,), for example using ravel().
+      return fit_method(estimator, *args, **kwargs)
+    
+
+
+
+
+<style>#sk-container-id-1 {
+  /* Definition of color scheme common for light and dark mode */
+  --sklearn-color-text: black;
+  --sklearn-color-line: gray;
+  /* Definition of color scheme for unfitted estimators */
+  --sklearn-color-unfitted-level-0: #fff5e6;
+  --sklearn-color-unfitted-level-1: #f6e4d2;
+  --sklearn-color-unfitted-level-2: #ffe0b3;
+  --sklearn-color-unfitted-level-3: chocolate;
+  /* Definition of color scheme for fitted estimators */
+  --sklearn-color-fitted-level-0: #f0f8ff;
+  --sklearn-color-fitted-level-1: #d4ebff;
+  --sklearn-color-fitted-level-2: #b3dbfd;
+  --sklearn-color-fitted-level-3: cornflowerblue;
+
+  /* Specific color for light theme */
+  --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, white)));
+  --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, black)));
+  --sklearn-color-icon: #696969;
+
+  @media (prefers-color-scheme: dark) {
+    /* Redefinition of color scheme for dark theme */
+    --sklearn-color-text-on-default-background: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-background: var(--sg-background-color, var(--theme-background, var(--jp-layout-color0, #111)));
+    --sklearn-color-border-box: var(--sg-text-color, var(--theme-code-foreground, var(--jp-content-font-color1, white)));
+    --sklearn-color-icon: #878787;
+  }
+}
+
+#sk-container-id-1 {
+  color: var(--sklearn-color-text);
+}
+
+#sk-container-id-1 pre {
+  padding: 0;
+}
+
+#sk-container-id-1 input.sk-hidden--visually {
+  border: 0;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+#sk-container-id-1 div.sk-dashed-wrapped {
+  border: 1px dashed var(--sklearn-color-line);
+  margin: 0 0.4em 0.5em 0.4em;
+  box-sizing: border-box;
+  padding-bottom: 0.4em;
+  background-color: var(--sklearn-color-background);
+}
+
+#sk-container-id-1 div.sk-container {
+  /* jupyter's `normalize.less` sets `[hidden] { display: none; }`
+     but bootstrap.min.css set `[hidden] { display: none !important; }`
+     so we also need the `!important` here to be able to override the
+     default hidden behavior on the sphinx rendered scikit-learn.org.
+     See: https://github.com/scikit-learn/scikit-learn/issues/21755 */
+  display: inline-block !important;
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-text-repr-fallback {
+  display: none;
+}
+
+div.sk-parallel-item,
+div.sk-serial,
+div.sk-item {
+  /* draw centered vertical line to link estimators */
+  background-image: linear-gradient(var(--sklearn-color-text-on-default-background), var(--sklearn-color-text-on-default-background));
+  background-size: 2px 100%;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+/* Parallel-specific style estimator block */
+
+#sk-container-id-1 div.sk-parallel-item::after {
+  content: "";
+  width: 100%;
+  border-bottom: 2px solid var(--sklearn-color-text-on-default-background);
+  flex-grow: 1;
+}
+
+#sk-container-id-1 div.sk-parallel {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  background-color: var(--sklearn-color-background);
+  position: relative;
+}
+
+#sk-container-id-1 div.sk-parallel-item {
+  display: flex;
+  flex-direction: column;
+}
+
+#sk-container-id-1 div.sk-parallel-item:first-child::after {
+  align-self: flex-end;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:last-child::after {
+  align-self: flex-start;
+  width: 50%;
+}
+
+#sk-container-id-1 div.sk-parallel-item:only-child::after {
+  width: 0;
+}
+
+/* Serial-specific style estimator block */
+
+#sk-container-id-1 div.sk-serial {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--sklearn-color-background);
+  padding-right: 1em;
+  padding-left: 1em;
+}
+
+
+/* Toggleable style: style used for estimator/Pipeline/ColumnTransformer box that is
+clickable and can be expanded/collapsed.
+- Pipeline and ColumnTransformer use this feature and define the default style
+- Estimators will overwrite some part of the style using the `sk-estimator` class
+*/
+
+/* Pipeline and ColumnTransformer style (default) */
+
+#sk-container-id-1 div.sk-toggleable {
+  /* Default theme specific background. It is overwritten whether we have a
+  specific estimator or a Pipeline/ColumnTransformer */
+  background-color: var(--sklearn-color-background);
+}
+
+/* Toggleable label */
+#sk-container-id-1 label.sk-toggleable__label {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  margin-bottom: 0;
+  padding: 0.5em;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:before {
+  /* Arrow on the left of the label */
+  content: "▸";
+  float: left;
+  margin-right: 0.25em;
+  color: var(--sklearn-color-icon);
+}
+
+#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {
+  color: var(--sklearn-color-text);
+}
+
+/* Toggleable content - dropdown */
+
+#sk-container-id-1 div.sk-toggleable__content {
+  max-height: 0;
+  max-width: 0;
+  overflow: hidden;
+  text-align: left;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content pre {
+  margin: 0.2em;
+  border-radius: 0.25em;
+  color: var(--sklearn-color-text);
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-toggleable__content.fitted pre {
+  /* unfitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {
+  /* Expand drop-down */
+  max-height: 200px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {
+  content: "▾";
+}
+
+/* Pipeline/ColumnTransformer-specific style */
+
+#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator-specific style */
+
+/* Colorize estimator box */
+#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted input.sk-toggleable__control:checked~label.sk-toggleable__label {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+#sk-container-id-1 div.sk-label label.sk-toggleable__label,
+#sk-container-id-1 div.sk-label label {
+  /* The background is the default theme color */
+  color: var(--sklearn-color-text-on-default-background);
+}
+
+/* On hover, darken the color of the background */
+#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+/* Label box, darken color on hover, fitted */
+#sk-container-id-1 div.sk-label.fitted:hover label.sk-toggleable__label.fitted {
+  color: var(--sklearn-color-text);
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Estimator label */
+
+#sk-container-id-1 div.sk-label label {
+  font-family: monospace;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 1.2em;
+}
+
+#sk-container-id-1 div.sk-label-container {
+  text-align: center;
+}
+
+/* Estimator-specific */
+#sk-container-id-1 div.sk-estimator {
+  font-family: monospace;
+  border: 1px dotted var(--sklearn-color-border-box);
+  border-radius: 0.25em;
+  box-sizing: border-box;
+  margin-bottom: 0.5em;
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-0);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-0);
+}
+
+/* on hover */
+#sk-container-id-1 div.sk-estimator:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-2);
+}
+
+#sk-container-id-1 div.sk-estimator.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-2);
+}
+
+/* Specification for estimator info (e.g. "i" and "?") */
+
+/* Common style for "i" and "?" */
+
+.sk-estimator-doc-link,
+a:link.sk-estimator-doc-link,
+a:visited.sk-estimator-doc-link {
+  float: right;
+  font-size: smaller;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1em;
+  height: 1em;
+  width: 1em;
+  text-decoration: none !important;
+  margin-left: 1ex;
+  /* unfitted */
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+  color: var(--sklearn-color-unfitted-level-1);
+}
+
+.sk-estimator-doc-link.fitted,
+a:link.sk-estimator-doc-link.fitted,
+a:visited.sk-estimator-doc-link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+div.sk-estimator:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover,
+div.sk-label-container:hover .sk-estimator-doc-link:hover,
+.sk-estimator-doc-link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+div.sk-estimator.fitted:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover,
+div.sk-label-container:hover .sk-estimator-doc-link.fitted:hover,
+.sk-estimator-doc-link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+/* Span, style for the box shown on hovering the info icon */
+.sk-estimator-doc-link span {
+  display: none;
+  z-index: 9999;
+  position: relative;
+  font-weight: normal;
+  right: .2ex;
+  padding: .5ex;
+  margin: .5ex;
+  width: min-content;
+  min-width: 20ex;
+  max-width: 50ex;
+  color: var(--sklearn-color-text);
+  box-shadow: 2pt 2pt 4pt #999;
+  /* unfitted */
+  background: var(--sklearn-color-unfitted-level-0);
+  border: .5pt solid var(--sklearn-color-unfitted-level-3);
+}
+
+.sk-estimator-doc-link.fitted span {
+  /* fitted */
+  background: var(--sklearn-color-fitted-level-0);
+  border: var(--sklearn-color-fitted-level-3);
+}
+
+.sk-estimator-doc-link:hover span {
+  display: block;
+}
+
+/* "?"-specific style due to the `<a>` HTML tag */
+
+#sk-container-id-1 a.estimator_doc_link {
+  float: right;
+  font-size: 1rem;
+  line-height: 1em;
+  font-family: monospace;
+  background-color: var(--sklearn-color-background);
+  border-radius: 1rem;
+  height: 1rem;
+  width: 1rem;
+  text-decoration: none;
+  /* unfitted */
+  color: var(--sklearn-color-unfitted-level-1);
+  border: var(--sklearn-color-unfitted-level-1) 1pt solid;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted {
+  /* fitted */
+  border: var(--sklearn-color-fitted-level-1) 1pt solid;
+  color: var(--sklearn-color-fitted-level-1);
+}
+
+/* On hover */
+#sk-container-id-1 a.estimator_doc_link:hover {
+  /* unfitted */
+  background-color: var(--sklearn-color-unfitted-level-3);
+  color: var(--sklearn-color-background);
+  text-decoration: none;
+}
+
+#sk-container-id-1 a.estimator_doc_link.fitted:hover {
+  /* fitted */
+  background-color: var(--sklearn-color-fitted-level-3);
+}
+</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>RandomForestClassifier(random_state=42)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator fitted sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label fitted sk-toggleable__label-arrow fitted">&nbsp;&nbsp;RandomForestClassifier<a class="sk-estimator-doc-link fitted" rel="noreferrer" target="_blank" href="https://scikit-learn.org/1.5/modules/generated/sklearn.ensemble.RandomForestClassifier.html">?<span>Documentation for RandomForestClassifier</span></a><span class="sk-estimator-doc-link fitted">i<span>Fitted</span></span></label><div class="sk-toggleable__content fitted"><pre>RandomForestClassifier(random_state=42)</pre></div> </div></div></div></div>
+
+
+
 ### 2.4 Calculate the prediction accuracy
 
 
@@ -675,6 +1935,27 @@ plt.ylabel('Actual Sports')
 plt.title('Normalized Confusion Matrix of Sports')
 plt.show()
 ```
+
+    Classification Report:
+                      precision    recall  f1-score   support
+    
+                bike       0.93      0.98      0.95      1825
+    bike (transport)       0.92      0.61      0.73       127
+      indoor cycling       0.88      0.67      0.76        76
+       mountain bike       0.82      0.41      0.54       130
+                 run       0.98      1.00      0.99      1691
+    
+            accuracy                           0.95      3849
+           macro avg       0.90      0.73      0.80      3849
+        weighted avg       0.95      0.95      0.95      3849
+    
+    
+
+
+    
+![png](README_files/README_76_1.png)
+    
+
 
 Based on the classification report, the model performs well overall with an accuracy of 0.95 and a weighted average F1-score of 0.95. However, the macro average F1-score (0.80) is lower than the weighted average (0.95), indicating that the model's performance varies significantly across classes, with poorer performance on minority classes. Performance for "bike (transport)", "indoor cycling", and "mountain bike" is notably lower, with F1-scores ranging from 0.54 to 0.76.
 
@@ -719,6 +2000,31 @@ plt.title('Normalized Confusion Matrix of Sports')
 plt.show()
 ```
 
+    c:\miniconda3\envs\v\lib\site-packages\sklearn\base.py:1473: DataConversionWarning: A column-vector y was passed when a 1d array was expected. Please change the shape of y to (n_samples,), for example using ravel().
+      return fit_method(estimator, *args, **kwargs)
+    
+
+    Classification Report:
+                      precision    recall  f1-score   support
+    
+                bike       0.96      0.94      0.95      1825
+    bike (transport)       0.77      0.81      0.79       127
+      indoor cycling       0.69      0.75      0.72        76
+       mountain bike       0.59      0.71      0.65       130
+                 run       0.99      0.99      0.99      1691
+    
+            accuracy                           0.95      3849
+           macro avg       0.80      0.84      0.82      3849
+        weighted avg       0.95      0.95      0.95      3849
+    
+    
+
+
+    
+![png](README_files/README_79_2.png)
+    
+
+
 The use of SMOTE has indeed improved the classification results, particularly for the minority classes. Let's break down the improvements and discuss real-life applications:
 
 Improvements after SMOTE:
@@ -744,8 +2050,3 @@ Real-life applications of this classfication model:
 
 
 This improved model shows the value of addressing class imbalance in real-world datasets, leading to more reliable and equitable performance across different activities.
-
-
-```python
-
-```
