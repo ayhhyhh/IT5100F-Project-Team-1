@@ -325,9 +325,11 @@ Why the Multiple Regression Model Performed Better:
 The better performance of the multiple regression model can be attributed to the fact that heart rate is influenced by multiple factors, not just speed. By adding altitude_diff as a second predictor, the model is able to account for the effects of elevation changes on heart rate. This reduces unexplained variability in the predictions and leads to more accurate results.
 The small reduction in MSE and MAE reflects the model's improved ability to capture the underlying relationship between heart rate and its predictors. The multiple regression model, by incorporating both speed and altitude, handles more complex interactions between the variables, leading to better overall predictive power.
 
-# **Task 1: Unsupervised Learning**
+# Assignment 3
 
-## Import Libraries
+## **Task 1: Unsupervised Learning**
+
+### Import Libraries
 
 
 ```python
@@ -342,9 +344,9 @@ from scipy.spatial.distance import euclidean
 tqdm.pandas()
 ```
 
-## 0: Data loading
+### 0: Data loading
 
-### Load the data from previous assignments
+#### Load the data from previous assignments
 
 For the project, we will continue to use the expanded dataset produced in Assignment 1. Here for the convenience of project development and evaluation, we have two options for data loading, one is loading the dataset from Google Drive(Option 1), another is loading dataset from our server(Option 2).
 
@@ -407,9 +409,9 @@ endomondo_df.info()
     memory usage: 591.8+ MB
     
 
-## 1: Data Preprocessing for Clustering
+### 1: Data Preprocessing for Clustering
 
-### 1.1 Filter Data for Specific Sport
+#### 1.1 Filter Data for Specific Sport
 
 First, we need to filter the dataset to include only users participating in the sport _Bike_. Before applying the filter, we use the `value_counts()` method to identify the different types of sports and the number of entries for each sport in the dataset.
 
@@ -592,7 +594,7 @@ bike_df.isna().sum().sum()
 
 At this point, we have successfully obtained a subset of the original dataset that only includes users who participated in sports `bike`.
 
-### 1.2 Generate Average Speed Dataset
+#### 1.2 Generate Average Speed Dataset
 
 Create a new dataset with `user_ids` and their average speed (`avg_speed`).
 
@@ -656,7 +658,7 @@ avg_speed_df.head()
 
 
 
-### 1.3 Compute Total Workout Time
+#### 1.3 Compute Total Workout Time
 
 Create a new dataset with `user_ids` and their total workout time (`workout_time`), calculated as the difference between the minimum and maximum timestamp in seconds for each user.
 
@@ -725,7 +727,7 @@ workout_time_df.head()
 
 
 
-### 1.4 Compute Total Distance Covered
+#### 1.4 Compute Total Distance Covered
 
 Create a new dataset with user_ids and the total distance (total_distance) covered by each user.
 
@@ -784,7 +786,7 @@ total_distance_df.head()
 
 
 
-### 1.5 Merge Processed Data
+#### 1.5 Merge Processed Data
 
 Merge all the above datasets into a single data frame called `user_merged_df`.
 To merge all the DataFrame together, We set `id` as index, then use `pd.concat` function to concatenate three DataFrame together.
@@ -860,9 +862,9 @@ user_merged_df.head()
 
 
 
-## 2: Determine the Optimal Number of Clusters
+### 2: Determine the Optimal Number of Clusters
 
-### 2.1 Run K-Means for Different Cluster Numbers
+#### 2.1 Run K-Means for Different Cluster Numbers
 
 Use the user_merged_df to run k-means clustering from 2-11 clusters.
 
@@ -893,7 +895,7 @@ print(inertia)
     [15168.299598080346, 10681.861943672142, 8863.346142508111, 7083.4150342617695, 5887.568984873041, 5189.091420621934, 4757.930468282856, 4243.862983974922, 3919.4003948357813, 3601.3000470406437]
     
 
-### 2.2 Elbow Method for Optimal Clusters
+#### 2.2 Elbow Method for Optimal Clusters
 
 Plot the inertia (y-axis) against the number of clusters (x-axis) to identify the optimal number of clusters using the Elbow method.
 
@@ -1008,7 +1010,7 @@ user_merged_df.head()
 
 
 
-### 3.2 Visualize the Clusters
+#### 3.2 Visualize the Clusters
 
 Visualize the clusters using a scatter plot.
 
@@ -1091,7 +1093,7 @@ plt.show()
     
 
 
-### 3.3 Identify Similar Users
+#### 3.3 Identify Similar Users
 
 Determine which cluster the user ID: 377398220 belongs to.
 
@@ -1187,10 +1189,10 @@ print(f"Workout Time: {cluster_avg['workout_time']:.2f} seconds")
     Workout Time: 3805.44 seconds
     
 
-# **Task 2: Free-form Exploration**: Sport Classfication
+## **Task 2: Free-form Exploration**: Sport Classfication
 
 
-# Problem definition
+## Problem definition
 
 
 The objective of this task is to develop a machine learning model capable of classifying different types of sports activities based on aggregated user data from the Endomondo fitness tracking application. This classification problem presents several interesting challenges and considerations:
@@ -1229,9 +1231,9 @@ The objective of this task is to develop a machine learning model capable of cla
 
 This model could have practical applications in personalizing fitness recommendations, improving activity recognition in tracking apps, and gaining insights into how different sports are characterized by various physiological and environmental factors.
 
-# Solution
+## Solution
 
-## Import Libraries
+### Import Libraries
 
 
 ```python
@@ -1247,9 +1249,9 @@ from sklearn.metrics import accuracy_score
 from imblearn.over_sampling import SMOTE
 ```
 
-## 0: Data loading
+### 0: Data loading
 
-### Load the data from previous assignments
+#### Load the data from previous assignments
 
 For the project, we will continue to use the expanded dataset produced in Assignment 1. Here for the convenience of project development and evaluation, we have two options for data loading, one is loading the dataset from Google Drive(Option 1), another is loading dataset from our server(Option 2).
 
@@ -1380,7 +1382,7 @@ endomondo_df.info()
     memory usage: 591.8+ MB
     
 
-### 1.1 Calculate Useful Factors
+#### 1.1 Calculate Useful Factors
 
 
 
@@ -1488,7 +1490,7 @@ new_endomondo_df.head()
 
 
 
-### 1.2 Explore class distributions after aggregation
+#### 1.2 Explore class distributions after aggregation
 
 
 ```python
@@ -1532,7 +1534,7 @@ plt.show()
 
 From the distribution above, we can observe that many sport classes have very few data samples of unique users after aggregation. These data cannot provide enough information for classfication, instead, these may introduce noise to our dataset. Hence, we decide to remove those sports with samples less than 100.
 
-### 1.3 Drop sports with very few users
+#### 1.3 Drop sports with very few users
 
 
 ```python
@@ -1588,9 +1590,9 @@ After filtering, we are actually classifying five sports:
 using the aggregation features we got from each user.
 
 
-## 2: Model Training and Application
+### 2: Model Training and Application
 
-### 2.1 Define the Features and Target Variable
+#### 2.1 Define the Features and Target Variable
 
 
 ```python
@@ -1604,7 +1606,7 @@ X = filtered_df[X_Features]
 Y = filtered_df[Y_Features]
 ```
 
-### 2.2 Split the data into training and testing sets
+#### 2.2 Split the data into training and testing sets
 
 
 ```python
@@ -1618,7 +1620,7 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 ```
 
-### 2.3 Build the Random Forest Classifier
+#### 2.3 Build the Random Forest Classifier
 
 
 ```python
@@ -1631,7 +1633,7 @@ rf = RandomForestClassifier(n_estimators=rf_N, random_state=RANDOM_STATE)
 rf.fit(X_train_scaled, Y_train)
 ```
 
-### 2.4 Calculate the prediction accuracy
+#### 2.4 Calculate the prediction accuracy
 
 
 ```python
@@ -1687,7 +1689,7 @@ By applying SMOTE and retraining the model, we aim to:
 * Achieve a more balanced performance across all classes, potentially increasing the macro average F1-score.
 * Maintain or possibly improve the overall accuracy while ensuring better representation of all sports categories.
 
-### 3.1 Try using SMOTE and retrain the model
+#### 3.1 Try using SMOTE and retrain the model
 
 
 ```python
