@@ -1,6 +1,40 @@
 # IT5100F - Assignment 3
 Semester: AY2024/2025 Semester 1
 
+- [IT5100F - Assignment 3](#it5100f---assignment-3)
+- [**Task 1: Unsupervised Learning**](#task-1-unsupervised-learning)
+  - [Import Libraries](#import-libraries)
+  - [0: Data loading](#0-data-loading)
+    - [Load the data from previous assignments](#load-the-data-from-previous-assignments)
+  - [1: Data Preprocessing for Clustering](#1-data-preprocessing-for-clustering)
+    - [1.1 Filter Data for Specific Sport](#11-filter-data-for-specific-sport)
+    - [1.2 Generate Average Speed Dataset](#12-generate-average-speed-dataset)
+    - [1.3 Compute Total Workout Time](#13-compute-total-workout-time)
+    - [1.4 Compute Total Distance Covered](#14-compute-total-distance-covered)
+    - [1.5 Merge Processed Data](#15-merge-processed-data)
+  - [2: Determine the Optimal Number of Clusters](#2-determine-the-optimal-number-of-clusters)
+    - [2.1 Run K-Means for Different Cluster Numbers](#21-run-k-means-for-different-cluster-numbers)
+    - [2.2 Elbow Method for Optimal Clusters](#22-elbow-method-for-optimal-clusters)
+  - [3: Cluster Analysis and Visualization](#3-cluster-analysis-and-visualization)
+    - [3.1 Identify the Cluster Number for Each User](#31-identify-the-cluster-number-for-each-user)
+    - [3.2 Visualize the Clusters](#32-visualize-the-clusters)
+    - [3.3 Identify Similar Users](#33-identify-similar-users)
+- [**Task 2: Free-form Exploration**: Sport Classfication](#task-2-free-form-exploration-sport-classfication)
+- [Problem definition](#problem-definition)
+- [Solution](#solution)
+  - [Import Libraries](#import-libraries-1)
+  - [0: Data loading](#0-data-loading-1)
+    - [Load the data from previous assignments](#load-the-data-from-previous-assignments-1)
+    - [1.1 Calculate Useful Factors](#11-calculate-useful-factors)
+    - [1.2 Explore class distributions after aggregation](#12-explore-class-distributions-after-aggregation)
+    - [1.3 Drop sports with very few users](#13-drop-sports-with-very-few-users)
+  - [2: Model Training and Application](#2-model-training-and-application)
+    - [2.1 Define the Features and Target Variable](#21-define-the-features-and-target-variable)
+    - [2.2 Split the data into training and testing sets](#22-split-the-data-into-training-and-testing-sets)
+    - [2.3 Build the Random Forest Classifier](#23-build-the-random-forest-classifier)
+    - [2.4 Calculate the prediction accuracy](#24-calculate-the-prediction-accuracy)
+    - [3.1 Try using SMOTE and retrain the model](#31-try-using-smote-and-retrain-the-model)
+
 # **Task 1: Unsupervised Learning**
 
 ## Import Libraries
