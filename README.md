@@ -1,4 +1,4 @@
-# IT5100F - Assignment 3
+# IT5100F - Assignment 1-3
 
 Semester: AY2024/2025 Semester 1
 
@@ -35,6 +35,295 @@ Semester: AY2024/2025 Semester 1
     - [2.3 Build the Random Forest Classifier](#23-build-the-random-forest-classifier)
     - [2.4 Calculate the prediction accuracy](#24-calculate-the-prediction-accuracy)
     - [3.1 Try using SMOTE and retrain the model](#31-try-using-smote-and-retrain-the-model)
+
+# Assignment 1
+## Introduction
+This report documents the steps and tasks completed as part of IT5100F Assignment 1, focusing on working with the Endomondo Dataset to analyze sensory data collected from fitness activities. The goal was to visualize data patterns using Python libraries such as Pandas, NumPy, and Matplotlib, while performing statistical analyses. The report walks through each stage of the notebook, describing the code and results, including graphical outputs.
+## Step-by-Step Analysis
+### 1. Dataset Overview
+The dataset used in this assignment comes from Endomondo, a fitness tracking website. It includes sensory data, such as heart rate, speed, and geographical coordinates (longitude and latitude). The dataset can be downloaded from the following link:
+- Endomondo Dataset
+### 2. Importing Libraries
+To begin, we imported essential Python libraries for data manipulation and visualization.
+```Python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
+The code initializes the use of Pandas for data handling, NumPy for numerical operations, and Matplotlib/Seaborn for visualizations.
+### 3. Loading and Preparing Data
+We loaded the dataset into a Pandas DataFrame to perform analysis.
+```python
+endomondo_df = pd.read_csv("path_to_endomondo_data.csv")
+```
+This line loads the dataset from a CSV file and stores it into `endomondo_df` for subsequent analysis.
+### 4. Data Cleaning and Preprocessing
+The dataset is cleaned by removing any null or irrelevant values. This ensures the dataset is properly formatted and prepared for analysis.
+#### Check for missing values
+```python
+# Find the total number of missing rows with null values in any column
+total_missing = endomondo_df.isnull().sum().sum()
+```
+- This checks if any column in the `endomondo_df` DataFrame has missing (null) values.
+- It calculates the total number of missing entries across all columns and prints the result.
+#### Ensure Consistency in Data Lengths
+
+```python
+# Ensure consistency by verifying that the number of entries in the altitude, latitude, longitude, timestamp, heart_rate, and speed arrays is the same for each id
+altitude_lens = endomondo_cleaned_df['altitude'].apply(len)
+heart_rate_lens = endomondo_cleaned_df['heart_rate'].apply(len)
+speed_lens = endomondo_cleaned_df['speed'].apply(len)
+latitude_lens = endomondo_cleaned_df['latitude'].apply(len)
+longitude_lens = endomondo_cleaned_df['longitude'].apply(len)
+timestamp_lens = endomondo_cleaned_df['timestamp'].apply(len)
+```
+- The lengths of the `altitude`, `heart_rate`, `speed`, `latitude`, `longitude`, and `timestamp` arrays are checked for each row using the `apply(len)` function. This ensures that all arrays corresponding to a particular `id` are of the same length.
+#### Identify Inconsistent Rows
+```python
+# Check if there are any rows with len(latitude) != len(longitude) != len(altitude) != len(timestamp) != len(heart_rate) != len(speed)
+	inconsistent_rows = endomondo_cleaned_df[
+	(altitude_lens != heart_rate_lens) |
+	(altitude_lens != speed_lens) |
+	(altitude_lens != latitude_lens) |
+	(altitude_lens != longitude_lens) |
+	(altitude_lens != timestamp_lens) |
+	(latitude_lens != longitude_lens) |
+	(latitude_lens != timestamp_lens) |
+	(latitude_lens != heart_rate_lens) |
+	(latitude_lens != speed_lens) |
+	(longitude_lens != timestamp_lens) |
+	(longitude_lens != heart_rate_lens) |
+	(longitude_lens != speed_lens) |
+	(timestamp_lens != heart_rate_lens) |
+	(timestamp_lens != speed_lens) |
+	(heart_rate_lens != speed_lens)
+]
+```
+- This step identifies rows where the lengths of any of the arrays (altitude, heart rate, speed, latitude, longitude, timestamp) are inconsistent. Rows with inconsistent lengths are filtered into `inconsistent_rows`.
+#### Expand the Arrays into Individual Columns
+```python
+# Transform the dataset by expanding each array (altitude, latitude, longitude, timestamp, heart_rate, speed) associated with id into individual columns, making sure each column holds a single value from the array.
+endomondo_expanded_df = endomondo_cleaned_df.explode(['altitude', 'latitude', 'longitude', 'timestamp', 'heart_rate', 'speed'])
+```
+- The `explode()` function is used to "unpack" arrays such as `altitude`, `latitude`, `longitude`, `timestamp`, `heart_rate`, and `speed` into individual rows. Each element of the array is placed in its own row, which makes the data easier to work with.
+#### Convert Timestamps to Datetime
+```python
+# Convert the timestamp column from seconds to a datetime object.
+endomondo_expanded_df["timestamp"] = pd.to_datetime(endomondo_expanded_df['timestamp'], unit='s')
+```
+- The `timestamp` column, originally in seconds, is converted into a `datetime` format using the `pd.to_datetime()` function for easier analysis and time-based operations.
+#### Check for Missing Values After Transformation
+```python
+# Check and ensure there are no null values in the dataset after the transformation.
+total_missing = endomondo_expanded_df.isnull().sum().sum()
+```
+- After transforming the dataset, the total number of missing values is recalculated to ensure that no missing values are introduced during the expansion and transformation steps.
+#### Plot Workouts by Sport
+```python
+# Create a bar chart that visualizes the number of workouts associated with each sport.  
+workouts_by_sport = endomondo_df['sport'].value_counts()  
+# print(workouts_by_sport)  
+  
+plt.figure(figsize=(10, 6))  
+bar_plot = sns.barplot(x=workouts_by_sport.index, y=workouts_by_sport.values)  
+  
+# Add labels and title  
+plt.xlabel('Sport')  
+plt.ylabel('Number of Workouts')  
+plt.title('Number of Workouts by Sport')  
+plt.xticks(rotation=45)  
+  
+# Add text labels on top of each bar  
+for index, value in enumerate(workouts_by_sport.values):  
+    plt.text(index, value + 5, str(value), ha='center')  
+  
+plt.tight_layout()  
+plt.show()
+```
+![workouts.png](https://ted.pics/images/2024/10/09/202410092144816.png)
+
+### 6. Scatter Plot: Heart Rate Heatmap
+In this step, the task is repeated with a different focus. The scatter plot uses the same longitude and latitude coordinates but colors the points based on the user's heart rate instead of altitude. The palette for this plot is set to `viridis` and `magma`.
+**Code Functionality:**
+- The same filtering for the specific user is applied.
+- The scatter plot uses `longitude` and `latitude` for the x and y axes, and `heart_rate` as the `hue`.
+```Python
+# Create a bar chart that visualizes the number of workouts associated with each sport.
+workouts_by_sport = endomondo_df['sport'].value_counts()
+plt.figure(figsize=(10, 6))
+bar_plot = sns.barplot(x=workouts_by_sport.index, y=workouts_by_sport.values)
+
+# Add labels and title
+plt.xlabel('Sport')
+plt.ylabel('Number of Workouts')
+plt.title('Number of Workouts by Sport')
+plt.xticks(rotation=45)
+
+# Add text labels on top of each bar
+for index, value in enumerate(workouts_by_sport.values):
+plt.text(index, value + 5, str(value), ha='center')
+
+plt.tight_layout()
+plt.show()
+```
+![heatmap_viridis.png](https://ted.pics/images/2024/10/09/202410092140924.png)
+
+```python
+USER_ID = 9633831
+PALLETE_NAME = "magma"
+
+user_data = endomondo_df[endomondo_df['id'] == USER_ID]
+plt.figure(figsize=(10, 8))
+scatter = sns.scatterplot(
+    x='longitude',
+    y='latitude',
+    hue='heart_rate',
+    data=user_data,
+    palette=PALLETE_NAME,
+    legend=False,
+    edgecolor=None
+)
+
+norm = plt.Normalize(user_data['heart_rate'].min(), user_data['heart_rate'].max())
+sm = plt.cm.ScalarMappable(cmap=PALLETE_NAME, norm=norm)
+plt.colorbar(sm, label='Heart Rate', ax=scatter.axes)
+
+plt.xlabel('Longitude')
+plt.ylabel('Latitude')
+plt.title(f'Heatmap of Heart Rate for User {USER_ID}')
+plt.tight_layout()
+plt.show()
+```
+![heatmap_magma.png](https://ted.pics/images/2024/10/09/202410092145722.png)
+
+## Conclusion
+This notebook performed data visualization for a fitness dataset, focusing on generating heatmap scatter plots based on geographical coordinates, heart rate, and altitude data for specific users. These visualizations help provide insights into how altitude and heart rate vary throughout workouts across different locations. Further analysis and visualization can explore other aspects of the dataset, such as speed, distance, or comparing multiple users.
+# Assignment 2
+## Introduction
+This notebook is part of **IT5100F - Assignment 2**. The goal is to compare two regression models (simple linear regression and multiple linear regression) based on their ability to predict heart rate using `speed_diff` and `altitude_diff` as predictors. The performance comparison involves Mean Squared Error (MSE), Mean Absolute Error (MAE), and visual scatter plots of the predicted values.
+### Dataset Overview
+The dataset includes user-specific records on heart rate, speed, and altitude. The data is used to build both simple and multiple linear regression models. The simple linear regression model uses only `speed_diff` as a predictor, while the multiple linear regression model includes both `speed_diff` and `altitude_diff`.
+### Part 1: Data Preparation
+#### 1.1 Data Loading
+The dataset is loaded using `pandas`, and the relevant columns such as `heart_rate`, `speed_diff`, and `altitude_diff` are selected for further analysis.
+```python
+import pandas as pd
+data = pd.read_csv('path_to_dataset.csv')
+# Select relevant columns for regression analysis
+df = data[['heart_rate', 'speed_diff', 'altitude_diff']]
+```
+### Part 2: Regression Modeling
+#### 2.1 Simple Linear Regression Model
+A simple linear regression model is built using `speed_diff` as the predictor variable to predict `heart_rate`. The regression is implemented using the `scikit-learn` library.
+**Code Functionality:**
+- The dataset is split into independent (`speed_diff`) and dependent (`heart_rate`) variables.
+- The `LinearRegression` model is instantiated and fitted to the data.
+- MSE and MAE are computed to assess the model's performance.
+```python
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+
+# Simple Linear Regression
+X = df[['speed_diff']]
+y = df['heart_rate']
+
+model = LinearRegression()
+model.fit(X, y)
+
+# Predictions
+y_pred = model.predict(X)
+
+# Calculate MSE and MAE
+mse = mean_squared_error(y, y_pred)
+mae = mean_absolute_error(y, y_pred)
+print(f'Simple Linear Regression MSE: {mse}, MAE: {mae}')
+```
+**Output:**
+- MSE: 15.51
+- MAE: 2.23
+#### 2.2 Multiple Linear Regression Model
+A multiple linear regression model is built using both `speed_diff` and `altitude_diff` as predictors to predict `heart_rate`. This allows the model to account for the effect of both speed and elevation changes on heart rate.
+**Code Functionality:**
+- The dataset is split into independent variables (`speed_diff`, `altitude_diff`) and the dependent variable (`heart_rate`).
+- The `LinearRegression` model is fitted with both predictors.
+- MSE and MAE are computed to evaluate the model's performance.
+```python
+# Multiple Linear Regression
+X_multi = df[['speed_diff', 'altitude_diff']]
+y = df['heart_rate']
+
+model_multi = LinearRegression()
+model_multi.fit(X_multi, y)
+
+# Predictions
+y_pred_multi = model_multi.predict(X_multi)
+
+# Calculate MSE and MAE
+mse_multi = mean_squared_error(y, y_pred_multi)
+mae_multi = mean_absolute_error(y, y_pred_multi)
+print(f'Multiple Linear Regression MSE: {mse_multi}, MAE: {mae_multi}')
+```
+**Output:**
+- MSE: 14.69
+- MAE: 2.19
+### Part 3: Scatter Plot Visualizations
+#### 3.1 Scatter Plot: Simple Linear Regression
+A scatter plot is generated to visualize the performance of the simple linear regression model. The actual `heart_rate` values are plotted against the predicted values to assess how well the model fits the data.
+```python
+plt.figure(figsize=(10, 6))
+# Assuming speed_diff is the first column of X_test
+plt.scatter(X_test, y_pred, color='blue', label='Predicted Heart Rate Change', alpha=0.6)
+# Scatter plot for actual heart rate change
+plt.scatter(X_test, y_test, color='green', label='Actual Heart Rate Change', alpha=0.6)
+# Add labels, title and legend
+plt.xlabel('Speed Difference (X_test)')
+plt.ylabel('Heart Rate Change')
+plt.title('Speed Difference vs Predicted and Actual Heart Rate Changes')
+plt.legend()
+plt.grid(True)
+# Show the plot
+plt.tight_layout()
+plt.show()
+```
+![scatter.png](https://ted.pics/images/2024/10/09/202410092126464.png)
+#### 3.2 Correlation Matrix: Multiple Linear Regression
+First we check the correlation matrix.
+```python
+correlation_matrix = endomondo_cleaned_df[X_Features].corr()
+plt.figure(figsize=(8, 6))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix')
+plt.show()
+```
+![correlation1.png](https://ted.pics/images/2024/10/09/202410092151683.png)
+
+#### 3.3 Scatter Plot: Multiple Linear Regression
+A scatter plot is created to visualize the performance of the multiple linear regression model. This plot shows the relationship between the actual `heart_rate` values and the predicted values using both `speed_diff` and `altitude_diff`.
+```python
+plt.figure(figsize=(10, 6))
+plt.scatter(X_test[:, 0], y_pred, color='blue', label='Predicted Heart Rate Change', alpha=0.6)
+# Scatter plot for actual heart rate change
+plt.scatter(X_test[:, 0], y_test, color='green', label='Actual Heart Rate Change', alpha=0.6)
+# Add labels, title and legend
+plt.xlabel('Speed Difference (X_test)')
+plt.ylabel('Heart Rate Change')
+plt.title('Speed Difference vs Predicted and Actual Heart Rate Changes')
+plt.legend()
+plt.grid(True)
+# Show the plot
+plt.tight_layout()
+plt.show()
+```
+![scatter3.png](https://ted.pics/images/2024/10/09/202410092148135.png)
+### Part 4: Model Comparison
+Performance Comparison (MSE, MAE, Scatter Plots):
+When comparing the simple linear regression model and the multiple linear regression model, the multiple linear regression model showed slightly **better** performance based on both MSE and MAE. The simple linear regression model, using only speed_diff as a predictor, resulted in an MSE of 15.51 and an MAE of 2.23. In contrast, the multiple linear regression model, which included both speed_diff and altitude_diff, reduced the errors to an MSE of 14.69 and an MAE of 2.19.
+In the scatter plot for the simple linear regression model, the predicted points lie strictly on a single straight line, whereas in the scatter plot for the multiple regression model, the predicted points are slightly scattered on both sides of a line, indicating they are closer to the actual values.
+
+Why the Multiple Regression Model Performed Better:
+The better performance of the multiple regression model can be attributed to the fact that heart rate is influenced by multiple factors, not just speed. By adding altitude_diff as a second predictor, the model is able to account for the effects of elevation changes on heart rate. This reduces unexplained variability in the predictions and leads to more accurate results.
+The small reduction in MSE and MAE reflects the model's improved ability to capture the underlying relationship between heart rate and its predictors. The multiple regression model, by incorporating both speed and altitude, handles more complex interactions between the variables, leading to better overall predictive power.
 
 # **Task 1: Unsupervised Learning**
 
