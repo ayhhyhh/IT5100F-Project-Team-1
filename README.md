@@ -35,27 +35,27 @@ Semester: AY2024/2025 Semester 1
 - [Assignment 3](#assignment-3)
   - [**Task 1: Unsupervised Learning**](#task-1-unsupervised-learning)
     - [Import Libraries](#import-libraries)
-    - [1: Data loading](#1-data-loading)
-      - [1.1 Load the data from previous assignments](#11-load-the-data-from-previous-assignments)
-    - [2: Data Preprocessing for Clustering](#2-data-preprocessing-for-clustering)
-      - [2.1 Filter Data for Specific Sport](#21-filter-data-for-specific-sport)
-      - [2.2 Generate Average Speed Dataset](#22-generate-average-speed-dataset)
-      - [2.3 Compute Total Workout Time](#23-compute-total-workout-time)
-      - [2.4 Compute Total Distance Covered](#24-compute-total-distance-covered)
-      - [2.5 Merge Processed Data](#25-merge-processed-data)
-    - [3: Determine the Optimal Number of Clusters](#3-determine-the-optimal-number-of-clusters)
-      - [3.1 Run K-Means for Different Cluster Numbers](#31-run-k-means-for-different-cluster-numbers)
-      - [3.2 Elbow Method for Optimal Clusters](#32-elbow-method-for-optimal-clusters)
-    - [4: Cluster Analysis and Visualization](#4-cluster-analysis-and-visualization)
-      - [4.1 Identify the Cluster Number for Each User](#41-identify-the-cluster-number-for-each-user)
-      - [4.2 Visualize the Clusters](#42-visualize-the-clusters)
-      - [4.3 Identify Similar Users](#43-identify-similar-users)
+    - [Data loading](#data-loading)
+      - [Load the data from previous assignments](#load-the-data-from-previous-assignments)
+    - [1: Data Preprocessing for Clustering](#1-data-preprocessing-for-clustering)
+      - [1.1 Filter Data for Specific Sport](#11-filter-data-for-specific-sport)
+      - [1.2 Generate Average Speed Dataset](#12-generate-average-speed-dataset)
+      - [1.3 Compute Total Workout Time](#13-compute-total-workout-time)
+      - [1.4 Compute Total Distance Covered](#14-compute-total-distance-covered)
+      - [1.5 Merge Processed Data](#15-merge-processed-data)
+    - [2: Determine the Optimal Number of Clusters](#2-determine-the-optimal-number-of-clusters)
+      - [2.1 Run K-Means for Different Cluster Numbers](#21-run-k-means-for-different-cluster-numbers)
+      - [2.2 Elbow Method for Optimal Clusters](#22-elbow-method-for-optimal-clusters)
+    - [3: Cluster Analysis and Visualization](#3-cluster-analysis-and-visualization)
+      - [3.1 Identify the Cluster Number for Each User](#31-identify-the-cluster-number-for-each-user)
+      - [3.2 Visualize the Clusters](#32-visualize-the-clusters)
+      - [3.3 Identify Similar Users](#33-identify-similar-users)
   - [**Task 2: Free-form Exploration**: Sport Classfication](#task-2-free-form-exploration-sport-classfication)
   - [Problem definition](#problem-definition)
   - [Solution](#solution)
     - [Import Libraries](#import-libraries-1)
-    - [1: Data loading](#1-data-loading-1)
-      - [1.1 Load the data from previous assignments](#11-load-the-data-from-previous-assignments-1)
+    - [1: Data loading](#1-data-loading)
+      - [1.1 Load the data from previous assignments](#11-load-the-data-from-previous-assignments)
       - [1.2 Calculate Useful Factors](#12-calculate-useful-factors)
       - [1.2 Explore class distributions after aggregation](#12-explore-class-distributions-after-aggregation)
       - [1.3 Drop sports with very few users](#13-drop-sports-with-very-few-users)
@@ -374,9 +374,9 @@ from scipy.spatial.distance import euclidean
 tqdm.pandas()
 ```
 
-### 1: Data loading
+### Data loading
 
-#### 1.1 Load the data from previous assignments
+#### Load the data from previous assignments
 
 For the project, we will continue to use the expanded dataset produced in Assignment 1. Here for the convenience of project development and evaluation, we have two options for data loading, one is loading the dataset from Google Drive(Option 1), another is loading dataset from our server(Option 2).
 
@@ -439,9 +439,9 @@ endomondo_df.info()
     memory usage: 591.8+ MB
     
 
-### 2: Data Preprocessing for Clustering
+### 1: Data Preprocessing for Clustering
 
-#### 2.1 Filter Data for Specific Sport
+#### 1.1 Filter Data for Specific Sport
 
 First, we need to filter the dataset to include only users participating in the sport _Bike_. Before applying the filter, we use the `value_counts()` method to identify the different types of sports and the number of entries for each sport in the dataset.
 
@@ -624,7 +624,7 @@ bike_df.isna().sum().sum()
 
 At this point, we have successfully obtained a subset of the original dataset that only includes users who participated in sports `bike`.
 
-#### 2.2 Generate Average Speed Dataset
+#### 1.2 Generate Average Speed Dataset
 
 Create a new dataset with `user_ids` and their average speed (`avg_speed`).
 
@@ -688,7 +688,7 @@ avg_speed_df.head()
 
 
 
-#### 2.3 Compute Total Workout Time
+#### 1.3 Compute Total Workout Time
 
 Create a new dataset with `user_ids` and their total workout time (`workout_time`), calculated as the difference between the minimum and maximum timestamp in seconds for each user.
 
@@ -757,7 +757,7 @@ workout_time_df.head()
 
 
 
-#### 2.4 Compute Total Distance Covered
+#### 1.4 Compute Total Distance Covered
 
 Create a new dataset with user_ids and the total distance (total_distance) covered by each user.
 
@@ -816,7 +816,7 @@ total_distance_df.head()
 
 
 
-#### 2.5 Merge Processed Data
+#### 1.5 Merge Processed Data
 
 Merge all the above datasets into a single data frame called `user_merged_df`.
 To merge all the DataFrame together, We set `id` as index, then use `pd.concat` function to concatenate three DataFrame together.
@@ -892,9 +892,9 @@ user_merged_df.head()
 
 
 
-### 3: Determine the Optimal Number of Clusters
+### 2: Determine the Optimal Number of Clusters
 
-#### 3.1 Run K-Means for Different Cluster Numbers
+#### 2.1 Run K-Means for Different Cluster Numbers
 
 Use the user_merged_df to run k-means clustering from 2-11 clusters.
 
@@ -925,7 +925,7 @@ print(inertia)
     [15168.299598080346, 10681.861943672142, 8863.346142508111, 7083.4150342617695, 5887.568984873041, 5189.091420621934, 4757.930468282856, 4243.862983974922, 3919.4003948357813, 3601.3000470406437]
     
 
-#### 3.2 Elbow Method for Optimal Clusters
+#### 2.2 Elbow Method for Optimal Clusters
 
 Plot the inertia (y-axis) against the number of clusters (x-axis) to identify the optimal number of clusters using the Elbow method.
 
@@ -956,9 +956,9 @@ plt.show()
 best_cluster_number = 6
 ```
 
-### 4: Cluster Analysis and Visualization
+### 3: Cluster Analysis and Visualization
 
-#### 4.1 Identify the Cluster Number for Each User
+#### 3.1 Identify the Cluster Number for Each User
 
 Create a k-means model using the features from `user_merged_df` and the optimal number of clusters identified in Task 2.
 
@@ -1040,7 +1040,7 @@ user_merged_df.head()
 
 
 
-#### 4.2 Visualize the Clusters
+#### 3.2 Visualize the Clusters
 
 Visualize the clusters using a scatter plot.
 
@@ -1123,7 +1123,7 @@ plt.show()
     
 
 
-#### 4.3 Identify Similar Users
+#### 3.3 Identify Similar Users
 
 Determine which cluster the user ID: 377398220 belongs to.
 
